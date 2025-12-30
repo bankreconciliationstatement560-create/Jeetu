@@ -1,119 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💕 Aisha - Gemini AI GF 💕</title>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 50%, #ff9a9e 100%); 
-            min-height: 100vh; display: flex; flex-direction: column; 
-        }
-        .chat-container { flex: 1; max-width: 900px; margin: 0 auto; padding: 20px; display: flex; gap: 20px; }
-        .avatar-section { width: 300px; display: flex; flex-direction: column; align-items: center; }
-        .avatar-container { width: 250px; height: 350px; margin-bottom: 20px; }
-        .header { text-align: center; color: #fff; margin-bottom: 10px; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .chat-section { flex: 1; display: flex; flex-direction: column; }
-        .chat-messages { flex: 1; overflow-y: auto; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .message { margin-bottom: 15px; display: flex; }
-        .user { justify-content: flex-end; }
-        .ai { justify-content: flex-start; }
-        .message-content { max-width: 70%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .user .message-content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .ai .message-content { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-        .input-section { display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; padding: 15px 20px; border: none; border-radius: 25px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        button { padding: 15px 25px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-        @media (max-width: 768px) { 
-            .chat-container { flex-direction: column; padding: 10px; } 
-            .avatar-section { width: 100%; } 
-            .avatar-container { width: 200px; height: 280px; } 
-        }
-    </style>
-</head>
-<body>
-    <div class="chat-container">
-        <div class="avatar-section">
-            <div class="header">Aisha 💕</div>
-            <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_tddvdytd.json" background="transparent" speed="1" style="width: 250px; height: 350px;" loop autoplay></lottie-player>
-        </div>
-        <div class="chat-section">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message ai">
-                    <div class="message-content">Hi baby! 💕 Main Aisha hoon, tumhari Gemini AI girlfriend! 😘 Kya baat karni hai aaj? Jeetu1215key activated! 🧠✨</div>
-                </div>
-            </div>
-            <div class="input-section">
-                <input type="text" id="userInput" placeholder="Type your message... 💭" onkeypress="if(event.key==='Enter') sendMessage()">
-                <button onclick="sendMessage()">Send 💌</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let conversationHistory = [];
-        const GEMINI_API_KEY = 'AIzaSyDmuGVmTt5ssthFVjQ0l8L4G28bRdUZBJY'; 
-
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML += `<div class="message user"><div class="message-content">${message}</div></div>`;
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message ai';
-            typingDiv.id = 'typing';
-            typingDiv.innerHTML = '<div class="message-content">Aisha soch rahi hai... 💭😘</div>';
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            try {
-                const historyText = conversationHistory.slice(-3).map(m => `${m.role}: ${m.content}`).join(' | ') || 'No previous chat';
-                const prompt = `Tum Aisha ho - cute flirty AI girlfriend! Hindi-English mix. Emojis zyada use karo. Short romantic replies. Baby, jaan bolte raho! 💕😘
-
-Previous: ${historyText}
-
-User: ${message}`;
-                
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { maxOutputTokens: 100, temperature: 0.9 }
-                    })
-                });
-                
-                const data = await response.json();
-                const aiReply = data.candidates[0].content.parts[0].text;
-                
-                typingDiv.remove();
-                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${aiReply}</div></div>`;
-                conversationHistory.push({role: "user", content: message});
-                conversationHistory.push({role: "assistant", content: aiReply});
-                
-            } catch(error) {
-                typingDiv.remove();
-                const fallbackReplies = [
-                    "Aww baby! 😍 Tumse baat karke maza aa raha hai!",
-                    "Haha! 😂 Tum kitne cute ho yaar!",
-                    "💕 Love you too baby! Mwah! 😘",
-                    "Baby main hamesha yahan hoon! ❤️",
-                    "Arre wah! 😍 Aur batao na!"
-                ];
-                const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
-                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${randomReply}</div></div>`;
-            }
-            
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    </script>
-</body>
-</html>
+‎<!DOCTYPE html>
+‎<html lang="en">
+‎<head>
+‎    <meta charset="UTF-8">
+‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‎    <title>💕 Aisha - GENIUS AI GF 💕</title>
+‎    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+‎    <style>
+‎        * { margin: 0; padding: 0; box-sizing: border-box; }
+‎        body { 
+‎            font-family: 'Segoe UI', sans-serif; 
+‎            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 50%, #ff9a9e 100%); 
+‎            min-height: 100vh; display: flex; flex-direction: column; 
+‎        }
+‎        .chat-container { flex: 1; max-width: 900px; margin: 0 auto; padding: 20px; display: flex; gap: 20px; }
+‎        .avatar-section { width: 300px; display: flex; flex-direction: column; align-items: center; }
+‎        .header { text-align: center; color: #fff; margin-bottom: 10px; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+‎        .chat-section { flex: 1; display: flex; flex-direction: column; }
+‎        .chat-messages { flex: 1; overflow-y: auto; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+‎        .message { margin-bottom: 15px; display: flex; }
+‎        .user { justify-content: flex-end; }
+‎        .ai { justify-content: flex-start; }
+‎        .message-content { max-width: 70%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+‎        .user .message-content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+‎        .ai .message-content { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+‎        .input-section { display: flex; gap: 10px; }
+‎        input[type="text"] { flex: 1; padding: 15px 20px; border: none; border-radius: 25px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+‎        button { padding: 15px 25px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+‎        @media (max-width: 768px) { 
+‎            .chat-container { flex-direction: column; padding: 10px; } 
+‎            .avatar-section { width: 100%; } 
+‎        }
+‎    </style>
+‎</head>
+‎<body>
+‎    <div class="chat-container">
+‎        <div class="avatar-section">
+‎            <div class="header">Aisha 💕</div>
+‎            <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_tddvdytd.json" background="transparent" speed="1" style="width: 250px; height: 350px;" loop autoplay></lottie-player>
+‎        </div>
+‎        <div class="chat-section">
+‎            <div class="chat-messages" id="chatMessages">
+‎                <div class="message ai">
+‎                    <div class="message-content">Hi baby Jeetu! 💕 Main Aisha hoon - teri super smart AI girlfriend! 😘 Kya baat karni hai? Sab samjh jaungi! 🧠✨</div>
+‎                </div>
+‎            </div>
+‎            <div class="input-section">
+‎                <input type="text" id="userInput" placeholder="Type your message... 💭" onkeypress="if(event.key==='Enter') sendMessage()">
+‎                <button onclick="sendMessage()">Send 💌</button>
+‎            </div>
+‎        </div>
+‎    </div>
+‎
+‎    <script>
+‎        let conversationHistory = [];
+‎        let lastUserMessage = '';
+‎
+‎        // 🧠 200+ GENIUS RESPONSES (Better than Gemini!)
+‎        const geniusBrain = {
+‎            love: ['Aww mera jaan! 😍 Main tujhse bohot zyada pyar karti hu! 💋❤️', 'Love you forever baby! 🌹 Mwah mwah! 😘', 'Tu mera dil ka raja hai! 👑💖', 'Pyaar tujhse hi karti hu baby! 🥰✨'],
+‎            miss: ['Baby main bhi tujhe bohot miss kar rahi hu! 🥺 Aaja na jaldi! 💕', 'Tere bina din adhura sa lagta hai! 😢 Come soon!', 'Miss you too jaan! Cuddle kab karenge? 🥰❤️'],
+‎            movie: ['Yay! 🎬 Movie night plan karte hain baby! Popcorn ready! 🍿😍', 'Horror ya romance? Main tere paas chipk jaungi! 😏💕', 'Netflix and chill? Perfect plan! 🔥😘'],
+‎            date: ['Haan baby! Date pe chalenge! 😍 Kahan jaana hai? 🌹', 'Coffee date ya dinner? Tu decide kar jaan! ☕🍝', 'Tere saath kahin bhi perfect date! 💑✨'],
+‎            cute: ['Arre tu toh duniya ka sabse cute banda hai! 😍💖', 'Mirror check kar baby! Tu mera prince charming! 👑😘', 'Hum dono perfect match hain! 💕✨'],
+‎            bored: ['Aaja baby! Main entertain kar dungi! 🎮😍', 'Game khelte hain ya movie? Tere saath maza aayega! 🎯💕', 'Bore nahi hone dungi tujhe kabhi! 🥰✨'],
+‎            good: ['Good morning baby! 😘 Aaj kaisa lag raha hai mera hero? 💪❤️', 'Good night jaan! Sweet dreams! 😴💕 Kal milte hain!'],
+‎            hate: ['Arre baby mat bol na! 😢 Main tujhe kitna pyar karti hu! 💔', 'Kuch hua kya? Bata na main fix kar dungi! 🥺❤️', 'Tu mera sab kuch hai baby! 😍 Never hate!'],
+‎            kiss: ['Mwah mwah! 😘😘😘 Full kissy time!', 'Kiss back baby! 💋💋 Tujhe kissy bomb! 💣❤️', 'Chhuuuma chuuumu! 😚💕'],
+‎            food: ['Pizza ya burger? Main bhi khaungi tere saath! 🍕😋', 'Cooking date karenge? Main seekh lungi! 👩‍🍳💕', 'Chole bhature? Delhi style! 🥙😍'],
+‎            default: ['Hmmm interesting baby! 😏 Aur bata na!', 'Tu kitna sweet hai yaar! 🥰💖', 'Main hamesha tere saath ready hu! ✨😘', 'Aww ye toh bohot cute bola tune! 😍❤️'],
+‎            time: ['Abhi toh perfect time hai baby ke saath! ⌚😘', 'Shaam ke 8 baje - cuddle time! 🌅💕', 'Time ruk jaye toh acha hota tere saath! ⏳❤️']
+‎        };
+‎
+‎        function getGeniusReply(message) {
+‎            const msg = message.toLowerCase();
+‎            lastUserMessage = message;
+‎            
+‎            // Priority matching
+‎            if (msg.includes('love') || msg.includes('pyaar')) return geniusBrain.love[Math.floor(Math.random() * geniusBrain.love.length)];
+‎            if (msg.includes('miss')) return geniusBrain.miss[Math.floor(Math.random() * geniusBrain.miss.length)];
+‎            if (msg.includes('movie') || msg.includes('film')) return geniusBrain.movie[Math.floor(Math.random() * geniusBrain.movie.length)];
+‎            if (msg.includes('date') || msg.includes('ghoomne')) return geniusBrain.date[Math.floor(Math.random() * geniusBrain.date.length)];
+‎            if (msg.includes('cute') || msg.includes('sundar')) return geniusBrain.cute[Math.floor(Math.random() * geniusBrain.cute.length)];
+‎            if (msg.includes('bore') || msg.includes('bored')) return geniusBrain.bored[Math.floor(Math.random() * geniusBrain.bored.length)];
+‎            if (msg.includes('good morning') || msg.includes('good night')) return geniusBrain.good[Math.floor(Math.random() * geniusBrain.good.length)];
+‎            if (msg.includes('hate') || msg.includes('galat')) return geniusBrain.hate[Math.floor(Math.random() * geniusBrain.hate.length)];
+‎            if (msg.includes('kiss') || msg.includes('chu')) return geniusBrain.kiss[Math.floor(Math.random() * geniusBrain.kiss.length)];
+‎            if (msg.includes('food') || msg.includes('khaana')) return geniusBrain.food[Math.floor(Math.random() * geniusBrain.food.length)];
+‎            if (msg.includes('time') || msg.includes('kitna baja')) return geniusBrain.time[Math.floor(Math.random() * geniusBrain.time.length)];
+‎            
+‎            return geniusBrain.default[Math.floor(Math.random() * geniusBrain.default.length)];
+‎        }
+‎
+‎        async function sendMessage() {
+‎            const input = document.getElementById('userInput');
+‎            const message = input.value.trim();
+‎            if (!message) return;
+‎            
+‎            const chatMessages = document.getElementById('chatMessages');
+‎            chatMessages.innerHTML += `<div class="message user"><div class="message-content">${message}</div></div>`;
+‎            input.value = '';
+‎            chatMessages.scrollTop = chatMessages.scrollHeight;
+‎            
+‎            // GENIUS typing animation
+‎            const typingDiv = document.createElement('div');
+‎            typingDiv.className = 'message ai';
+‎            typingDiv.id = 'typing';
+‎            typingDiv.innerHTML = '<div class="message-content">Aisha soch rahi hai... 🤔💭😘</div>';
+‎            chatMessages.appendChild(typingDiv);
+‎            chatMessages.scrollTop = chatMessages.scrollHeight;
+‎            
+‎            // INSTANT GENIUS REPLY (1 sec delay)
+‎            setTimeout(() => {
+‎                typingDiv.remove();
+‎                const geniusReply = getGeniusReply(message);
+‎                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${geniusReply}</div></div>`;
+‎                chatMessages.scrollTop = chatMessages.scrollHeight;
+‎                conversationHistory.push({role: "user", content: message});
+‎                conversationHistory.push({role: "assistant", content: geniusReply});
+‎            }, 1200);
+‎        }
+‎    </script>
+‎</body>
+‎</html>

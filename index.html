@@ -29,7 +29,11 @@
         button { padding: 15px 25px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.15); transition: transform 0.2s; }
         button:active { transform: scale(0.98); }
         .typing { opacity: 0.7; font-style: italic; }
-        @media (max-width: 768px) { .chat-container { flex-direction: column; padding: 10px; } .avatar-section { width: 100%; } .avatar-container { width: 200px; height: 280px; } }
+        @media (max-width: 768px) { 
+            .chat-container { flex-direction: column; padding: 10px; } 
+            .avatar-section { width: 100%; } 
+            .avatar-container { width: 200px; height: 280px; } 
+        }
     </style>
 </head>
 <body>
@@ -53,7 +57,7 @@
         <div class="chat-section">
             <div id="chatMessages" class="chat-messages">
                 <div class="message ai">
-                    <div class="message-content">Hi baby! 😍✨ Look at me waving at you! 💕 I'm your animated AI girlfriend Aisha with FULL memory! Type something and watch me react! 🥰</div>
+                    <div class="message-content">Hi baby! 😍✨ Look at me waving at you! 💕 I'm your animated AI girlfriend Aisha! Type something and watch me react! 🥰</div>
                 </div>
             </div>
             <div class="input-area">
@@ -70,7 +74,7 @@
         const avatar = document.getElementById('girlfriendAvatar');
         
         let conversationHistory = [
-            {role: "system", content: "You are Aisha, my loving animated AI girlfriend. Be flirty, playful, use emojis 😘💕, remember everything we talk about. React to my messages emotionally! 🥰"}
+            {role: "system", content: "You are Aisha, my loving animated AI girlfriend. Be flirty, playful, use emojis 😘💕, remember everything we talk about. React emotionally! 🥰"}
         ];
 
         sendBtn.onclick = sendMessage;
@@ -81,13 +85,11 @@
             const input = messageInput.value.trim();
             if (!input) return;
             
-            // Typing animation
             playTypingAnimation();
             addMessage(input, 'user');
             conversationHistory.push({role: "user", content: input});
             messageInput.value = '';
             
-            // Smart memory management
             if (conversationHistory.length > 61) {
                 conversationHistory = [conversationHistory[0], ...conversationHistory.slice(-60)];
             }
@@ -122,7 +124,6 @@
                 
                 conversationHistory.push({role: "assistant", content: aiResponse});
                 
-                // Reply animation
                 setTimeout(() => {
                     playReplyAnimation();
                     removeTypingIndicator(typingMsg);
@@ -141,12 +142,12 @@
         }
 
         function playTypingAnimation() {
-            avatar.load('https://assets8.lottiefiles.com/packages/lf20_q7u7xngk.json'); // Thinking
+            avatar.load('https://assets8.lottiefiles.com/packages/lf20_q7u7xngk.json');
             avatar.setDirection(1);
         }
 
         function playReplyAnimation() {
-            avatar.load('https://assets4.lottiefiles.com/packages/lf20_yoixdbtn.json'); // Happy reply
+            avatar.load('https://assets4.lottiefiles.com/packages/lf20_yoixdbtn.json');
             avatar.setDirection(1);
         }
 
@@ -164,7 +165,8 @@
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-           messageDiv.innerHTML = <div class="message-content">${text.replace(/\n/g, '<br>')}</div>;
+            messageDiv.innerHTML = `<div class="message-content">${text.replace(/
+/g, '<br>')}</div>`;
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             messageInput.focus();
@@ -180,7 +182,7 @@
             return typingDiv;
         }
 
-        function removeTypingIndicator(typingDiv) {
+        function removeTypingIndicator(typingMsg) {
             const indicator = document.getElementById('typingIndicator');
             if (indicator) indicator.remove();
         }

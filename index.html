@@ -164,8 +164,8 @@
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<div class="message-content">${text.replace(/
-/g, '<br>')}</div>`;
+            messageDiv.innerHTML = `<div class="message-content">`${text.replace(/
+/g, '<br>')}`
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             messageInput.focus();

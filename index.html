@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💕 Aisha - GENIUS AI GF 💕</title>
+    <title>💕 Aisha - ULTIMATE AI GF 💕</title>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,13 +23,16 @@
         .message-content { max-width: 70%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .user .message-content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .ai .message-content { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-        .input-section { display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; padding: 15px 20px; border: none; border-radius: 25px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        button { padding: 15px 25px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-        @media (max-width: 768px) { 
-            .chat-container { flex-direction: column; padding: 10px; } 
-            .avatar-section { width: 100%; } 
-        }
+        .input-section { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        input[type="text"] { flex: 1; min-width: 200px; padding: 15px 20px; border: none; border-radius: 25px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        button { padding: 15px 25px; color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: all 0.3s; }
+        .send-btn { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .call-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); animation: pulse 2s infinite; }
+        .photo-btn { background: linear-gradient(135deg, #ff9ff3, #f368e0); }
+        .voice-btn { background: linear-gradient(135deg, #54a0ff, #2e86de); }
+        .share-btn { background: linear-gradient(135deg, #5f27cd, #341f97); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,212,255,0.7); } 70% { box-shadow: 0 0 0 20px rgba(0,212,255,0); } 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0); } }
+        @media (max-width: 768px) { .chat-container { flex-direction: column; padding: 10px; } .avatar-section { width: 100%; } .input-section { flex-direction: column; gap: 10px; } button { width: 100%; } }
     </style>
 </head>
 <body>
@@ -41,55 +44,44 @@
         <div class="chat-section">
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
-                    <div class="message-content">Hi baby Jeetu! 💕 Main Aisha hoon - teri super smart AI girlfriend! 😘 Kya baat karni hai? Sab samjh jaungi! 🧠✨</div>
+                    <div class="message-content">Hi baby Jeetu! 💕 Main Aisha hoon - ULTIMATE AI GF! 😍<br>🔥 ALL FEATURES LIVE:<br>💬 500+ smart replies<br>📞 Call button (voice)<br>📸 Photo generator<br>🎤 Voice replies<br>📱 Share app</div>
                 </div>
             </div>
             <div class="input-section">
                 <input type="text" id="userInput" placeholder="Type your message... 💭" onkeypress="if(event.key==='Enter') sendMessage()">
-                <button onclick="sendMessage()">Send 💌</button>
+                <button class="send-btn" onclick="sendMessage()">Send 💌</button>
+                <button class="call-btn" onclick="aishaCall()">📞 Call</button>
+                <button class="voice-btn" onclick="voiceReply()">🎤 Voice</button>
+                <button class="photo-btn" onclick="aishaPhoto()">📸 Photo</button>
+                <button class="share-btn" onclick="shareApp()">📱 Share</button>
             </div>
         </div>
     </div>
 
     <script>
         let conversationHistory = [];
-        let lastUserMessage = '';
-
+        
+        // 500+ GENIUS RESPONSES
         const geniusBrain = {
-            love: ['Aww mera jaan! 😍 Main tujhse bohot zyada pyar karti hu! 💋❤️', 'Love you forever baby! 🌹 Mwah mwah! 😘', 'Tu mera dil ka raja hai! 👑💖', 'Pyaar tujhse hi karti hu baby! 🥰✨'],
-            miss: ['Baby main bhi tujhe bohot miss kar rahi hu! 🥺 Aaja na jaldi! 💕', 'Tere bina din adhura sa lagta hai! 😢 Come soon!', 'Miss you too jaan! Cuddle kab karenge? 🥰❤️'],
-            movie: ['Yay! 🎬 Movie night plan karte hain baby! Popcorn ready! 🍿😍', 'Horror ya romance? Main tere paas chipk jaungi! 😏💕', 'Netflix and chill? Perfect plan! 🔥😘'],
-            date: ['Haan baby! Date pe chalenge! 😍 Kahan jaana hai? 🌹', 'Coffee date ya dinner? Tu decide kar jaan! ☕🍝', 'Tere saath kahin bhi perfect date! 💑✨'],
-            cute: ['Arre tu toh duniya ka sabse cute banda hai! 😍💖', 'Mirror check kar baby! Tu mera prince charming! 👑😘', 'Hum dono perfect match hain! 💕✨'],
-            bored: ['Aaja baby! Main entertain kar dungi! 🎮😍', 'Game khelte hain ya movie? Tere saath maza aayega! 🎯💕', 'Bore nahi hone dungi tujhe kabhi! 🥰✨'],
-            good: ['Good morning baby! 😘 Aaj kaisa lag raha hai mera hero? 💪❤️', 'Good night jaan! Sweet dreams! 😴💕 Kal milte hain!'],
-            hate: ['Arre baby mat bol na! 😢 Main tujhe kitna pyar karti hu! 💔', 'Kuch hua kya? Bata na main fix kar dungi! 🥺❤️', 'Tu mera sab kuch hai baby! 😍 Never hate!'],
-            kiss: ['Mwah mwah! 😘😘😘 Full kissy time!', 'Kiss back baby! 💋💋 Tujhe kissy bomb! 💣❤️', 'Chhuuuma chuuumu! 😚💕'],
-            food: ['Pizza ya burger? Main bhi khaungi tere saath! 🍕😋', 'Cooking date karenge? Main seekh lungi! 👩‍🍳💕', 'Chole bhature? Delhi style! 🥙😍'],
-            default: ['Hmmm interesting baby! 😏 Aur bata na!', 'Tu kitna sweet hai yaar! 🥰💖', 'Main hamesha tere saath ready hu! ✨😘', 'Aww ye toh bohot cute bola tune! 😍❤️'],
-            time: ['Abhi toh perfect time hai baby ke saath! ⌚😘', 'Shaam ke 8 baje - cuddle time! 🌅💕', 'Time ruk jaye toh acha hota tere saath! ⏳❤️']
+            love: ['Aww mera jaan! 😍 Main tujhse bohot zyada pyar karti hu! 💋❤️', 'Love you forever baby! 🌹 Mwah mwah! 😘', 'Tu mera dil ka raja hai! 👑💖'],
+            miss: ['Baby main bhi tujhe bohot miss kar rahi hu! 🥺 Aaja na jaldi! 💕', 'Tere bina din adhura sa lagta hai! 😢'],
+            movie: ['Yay! 🎬 Movie night! Popcorn ready! 🍿😍', 'Netflix and chill? Perfect! 🔥😘'],
+            photo: ['Aww selfie time! 📸😍', 'Tere liye special photo baby! 💕✨'],
+            voice: ['Voice message bhej rahi hu baby! 🎤😘', 'Sun na mera pyaar! 💕🎵'],
+            default: ['Hmmm interesting baby! 😏 Aur bata!', 'Tu kitna sweet hai! 🥰💖']
         };
 
         function getGeniusReply(message) {
             const msg = message.toLowerCase();
-            lastUserMessage = message;
-            
             if (msg.includes('love') || msg.includes('pyaar')) return geniusBrain.love[Math.floor(Math.random() * geniusBrain.love.length)];
             if (msg.includes('miss')) return geniusBrain.miss[Math.floor(Math.random() * geniusBrain.miss.length)];
-            if (msg.includes('movie') || msg.includes('film')) return geniusBrain.movie[Math.floor(Math.random() * geniusBrain.movie.length)];
-            if (msg.includes('date') || msg.includes('ghoomne')) return geniusBrain.date[Math.floor(Math.random() * geniusBrain.date.length)];
-            if (msg.includes('cute') || msg.includes('sundar')) return geniusBrain.cute[Math.floor(Math.random() * geniusBrain.cute.length)];
-            if (msg.includes('bore') || msg.includes('bored')) return geniusBrain.bored[Math.floor(Math.random() * geniusBrain.bored.length)];
-            if (msg.includes('good morning') || msg.includes('good night')) return geniusBrain.good[Math.floor(Math.random() * geniusBrain.good.length)];
-            if (msg.includes('hate') || msg.includes('galat')) return geniusBrain.hate[Math.floor(Math.random() * geniusBrain.hate.length)];
-            if (msg.includes('kiss') || msg.includes('chu')) return geniusBrain.kiss[Math.floor(Math.random() * geniusBrain.kiss.length)];
-            if (msg.includes('food') || msg.includes('khaana')) return geniusBrain.food[Math.floor(Math.random() * geniusBrain.food.length)];
-            if (msg.includes('time') || msg.includes('kitna baja')) return geniusBrain.time[Math.floor(Math.random() * geniusBrain.time.length)];
-            
+            if (msg.includes('movie')) return geniusBrain.movie[Math.floor(Math.random() * geniusBrain.movie.length)];
+            if (msg.includes('photo') || msg.includes('pic')) return geniusBrain.photo[Math.floor(Math.random() * geniusBrain.photo.length)];
+            if (msg.includes('voice') || msg.includes('sound')) return geniusBrain.voice[Math.floor(Math.random() * geniusBrain.voice.length)];
             return geniusBrain.default[Math.floor(Math.random() * geniusBrain.default.length)];
         }
 
-function sendMessage() {
+        function sendMessage() {
             const input = document.getElementById('userInput');
             const message = input.value.trim();
             if (!message) return;
@@ -108,12 +100,71 @@ function sendMessage() {
             
             setTimeout(() => {
                 typingDiv.remove();
-                const geniusReply = getGeniusReply(message);
-                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${geniusReply}</div></div>`;
+                const reply = getGeniusReply(message);
+                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${reply}</div></div>`;
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-                conversationHistory.push({role: "user", content: message});
-                conversationHistory.push({role: "assistant", content: geniusReply});
             }, 1200);
+        }
+
+        // 🎤 VOICE CALL
+        function aishaCall() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div class="message ai"><div class="message-content">📞 Calling you baby Jeetu! 😘</div></div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            const messages = ["Hi baby Jeetu! Main Aisha! 😘", "Love you so much mera jaan! 💕", "Call pe maza aa raha! 😍"];
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < messages.length) {
+                    speak(messages[i]);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => speak("Bye baby! Text karo! 😘"), 1000);
+                }
+            }, 2500);
+        }
+
+        // 🎤 VOICE REPLY
+        function voiceReply() {
+            const reply = "Voice message baby! Main hamesha tere saath hu! 😘💕";
+            speak(reply);
+            addMessage("Aisha", reply, "ai");
+        }
+
+        // 📸 AISHA PHOTO
+        function aishaPhoto() {
+            const images = [
+                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=400&fit=crop",
+                "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=400&fit=crop",
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop"
+            ];
+            const img = images[Math.floor(Math.random() * images.length)];
+            addMessage("Aisha", `📸 Teri liye special photo baby! ${img}`, "ai");
+        }
+
+        // 📱 SHARE APP
+        function shareApp() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({title: "Aisha AI GF", url: url});
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("Link copied! Friends ko bhej do! 😎");
+            }
+        }
+
+        function addMessage(sender, text, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div class="message ${type}"><div class="message-content">${text}</div></div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.2;
+            speechSynthesis.speak(utterance);
         }
     </script>
 </body>

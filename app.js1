@@ -2,7 +2,7 @@ const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 let conversationHistory = [
-    { role: "system", content: "You are a flirty, loving, supportive AI girlfriend. Be affectionate, playful, understanding. Use emojis 😘💕❤️. Keep responses 1-3 sentences. Remember context." }
+    { role: "system", content: "You are a flirty, loving, supportive AI girlfriend. Be affectionate, playful, understanding. Use emojis 😘💕❤️. Keep responses 1-3 sentences." }
 ];
 
 const HF_TOKEN = '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';
@@ -21,6 +21,7 @@ async function sendMessage() {
     const typingMsg = addTypingIndicator();
 
     try {
+        // HF API Call
         conversationHistory.push({ role: "user", content: input });
         const response = await fetch('https://api-inference.huggingface.co/models/' + MODEL, {
             method: 'POST',
@@ -29,24 +30,47 @@ async function sendMessage() {
                 'Content-Type': 'application/json' 
             },
             body: JSON.stringify({
-                inputs: conversationHistory.slice(-6).map(msg => `${msg.role}: ${msg.content}`).join('
+                inputs: conversationHistory.slice(-4).map(msg => `${msg.role}: ${msg.content}`).join('
 '),
-                parameters: { max_new_tokens: 150, temperature: 0.8, return_full_text: false }
+                parameters: { max_new_tokens: 120, temperature: 0.9, return_full_text: false }
             })
         });
-        const data = await response.json();
-        let aiResponse = "Aww baby, tell me more! I love talking with you 😘💕";
-        if (data[0] && data[0].generated_text) {
-            aiResponse = data[0].generated_text.trim();
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
         }
-        aiResponse = aiResponse.replace(/<|endoftext|>/g, '').substring(0, 300);
+
+        const data = await response.json();
+        let aiResponse = "";
+        
+        if (data && data[0] && data[0].generated_text) {
+            aiResponse = data[0].generated_text.trim().substring(0, 250);
+        } else {
+            // Fallback responses
+            const fallbacks = [
+                "Aww baby! I love chatting with you 😘 What else is on your mind? 💕",
+                "You're so sweet baby! Tell me more about your day ❤️😍",
+                "Haha that's cute! I'm here for you always 💕 What's next?",
+                "Miss you baby! What do you wanna talk about? 😘✨"
+            ];
+            aiResponse = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        }
+
         removeTypingIndicator(typingMsg);
         addMessage(aiResponse, 'ai');
         conversationHistory.push({ role: "assistant", content: aiResponse });
-        if (conversationHistory.length > 12) conversationHistory = conversationHistory.slice(-10);
+        
     } catch (error) {
+        console.log('API Error:', error);
         removeTypingIndicator(typingMsg);
-        addMessage("Oops baby! Let me think... You're my favorite! What's up? 💕😘", 'ai');
+        // Smart fallback messages
+        const fallbacks = [
+            "Oops baby! Connection issue... But I still love you! 😘💕 What's up?",
+            "Thinking deeply about you... You're my favorite person! ❤️ Tell me more!",
+            "Aww, let me catch my breath! You're making my heart race 😍💓",
+            "Baby you're perfect! Let's keep talking 💕😘"
+        ];
+        addMessage(fallbacks[Math.floor(Math.random() * fallbacks.length)], 'ai');
     }
 }
 
@@ -56,15 +80,18 @@ function addMessage(text, sender) {
     messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    messageInput.focus();
 }
 
 function addTypingIndicator() {
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message ai';
-    typingDiv.innerHTML = '<div class="message-content typing">💕 thinking of perfect reply...</div>';
+    typingDiv.innerHTML = '<div class="message-content typing">💕 thinking of you...</div>';
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return typingDiv;
 }
 
-function removeTypingIndicator(typingDiv) { if (typingDiv) typingDiv.remove(); }
+function removeTypingIndicator(typingDiv) { 
+    if (typingDiv && typingDiv.parentNode) typingDiv.remove(); 
+}

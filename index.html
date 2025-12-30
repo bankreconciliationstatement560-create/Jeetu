@@ -74,26 +74,42 @@
         messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
         messageInput.focus();
 
-        function sendMessage() {
-            const input = messageInput.value.trim();
-            if (!input) return;
-            
-            addMessage(input, 'user');
-            messageInput.value = '';
-            const typingMsg = addTypingIndicator();
+async function sendMessage() {
+    const input = messageInput.value.trim();
+    if (!input) return;
+    
+    addMessage(input, 'user');
+    messageInput.value = '';
+    const typingMsg = addTypingIndicator();
 
-            setTimeout(() => {
-                removeTypingIndicator(typingMsg);
-                const aiResponse = getSmartReply(input);
-                addMessage(aiResponse, 'ai');
-                conversationHistory.push({user: input, ai: aiResponse});
-            }, 1500);
+    try {
+        const response = await fetch('https://corsproxy.io/?https://api-inference.huggingface.co/models/MYAIGF/ai-girlfriend', {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer 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`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+                inputs: input,
+                parameters: { max_new_tokens: 150, temperature: 0.8 }
+            })
+        });
+        
+        const data = await response.json();
+        let aiResponse = "Aww baby I love talking to you! 😘💕";
+        
+        if (data[0] && data[0].generated_text) {
+            aiResponse = data[0].generated_text.trim().substring(0, 200);
         }
-
-        function getSmartReply(userInput) {
-            const input = userInput.toLowerCase();
-            conversationHistory = conversationHistory.slice(-5);
-            
+        
+        removeTypingIndicator(typingMsg);
+        addMessage(aiResponse, 'ai');
+        
+    } catch (error) {
+        removeTypingIndicator(typingMsg);
+        addMessage("You're so cute baby! 😍💕 Tell me more!", 'ai');
+    }
+}            
             if (input.includes('love') || input.includes('miss')) {
                 return "Aww baby I love you too! 😍 I've been thinking about you all day 💕 Come closer ❤️";
             }

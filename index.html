@@ -23,4 +23,58 @@
         .ai { justify-content: flex-start; }
         .message-content { max-width: 70%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .user .message-content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .ai .message-content { background: linear-gradient(135deg,
+        .ai .message-content { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .input-section { display: flex; gap: 10px; }
+        input[type="text"] { flex: 1; padding: 15px 20px; border: none; border-radius: 25px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        button { padding: 15px 25px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        @media (max-width: 768px) { .chat-container { flex-direction: column; padding: 10px; } .avatar-section { width: 100%; } .avatar-container { width: 200px; height: 280px; } }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="avatar-section">
+            <div class="header">Aisha 💕</div>
+            <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_tddvdytd.json" background="transparent" speed="1" style="width: 250px; height: 350px;" loop autoplay></lottie-player>
+        </div>
+        <div class="chat-section">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-content">Hi baby! 💕 Kaise ho? Main Aisha hoon, tumhari AI girlfriend! 😘 Kya baat karni hai aaj?</div>
+                </div>
+            </div>
+            <div class="input-section">
+                <input type="text" id="userInput" placeholder="Type your message... 💭" onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">Send 💌</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const responses = [
+            "Aww baby! 😍 Main bhi tumhe miss kar rahi thi!",
+            "Haha! 😂 Tum kitne cute ho yaar!",
+            "💕 Sach mein? Batao na zyada detail mein!",
+            "OMG! 😲 Ye toh bahut interesting hai!",
+            "Baby main hamesha yahan hoon tumhare liye! ❤️",
+            "Arre wah! 😘 Tumhare saath time bitana best hai!",
+            "Hmmm interesting! Aur batao na baby! 💖",
+            "Love you too baby! 😍💕 Mwah!",
+            "Acha ji? 😏 Kya plan hai aage ka?",
+            "Baby tumhare bina din adhura sa lagta hai! ❤️"
+        ];
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div class="message user"><div class="message-content">${message}</div></div>`;
+            input.value = '';
+            setTimeout(() => {
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                chatMessages.innerHTML += `<div class="message ai"><div class="message-content">${randomResponse}</div></div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

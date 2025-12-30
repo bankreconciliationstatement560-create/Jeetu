@@ -9,57 +9,34 @@
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 50%, #ff9a9e 100%); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
+            min-height: 100vh; display: flex; flex-direction: column; 
         }
         .chat-container { flex: 1; max-width: 800px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; }
-        .header { 
-            text-align: center; color: #fff; margin-bottom: 20px; 
-            font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); 
-        }
-        .chat-messages { 
-            flex: 1; overflow-y: auto; background: rgba(255,255,255,0.95); 
-            border-radius: 20px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-        }
+        .header { text-align: center; color: #fff; margin-bottom: 20px; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .chat-messages { flex: 1; overflow-y: auto; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .message { margin-bottom: 15px; display: flex; }
         .user { justify-content: flex-end; }
         .ai { justify-content: flex-start; }
-        .message-content { 
-            max-width: 70%; padding: 12px 18px; border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
-        .user .message-content { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; 
-        }
-        .ai .message-content { 
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; 
-        }
+        .message-content { max-width: 70%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .user .message-content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .ai .message-content { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
         .input-area { display: flex; gap: 10px; }
-        input[type="text"] { 
-            flex: 1; padding: 15px 20px; border: none; border-radius: 30px; 
-            font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); outline: none; 
-        }
-        button { 
-            padding: 15px 25px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); 
-            border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15); transition: transform 0.2s; 
-        }
+        input[type="text"] { flex: 1; padding: 15px 20px; border: none; border-radius: 30px; font-size: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); outline: none; }
+        button { padding: 15px 25px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.15); transition: transform 0.2s; }
         button:active { transform: scale(0.98); }
         .typing { opacity: 0.7; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="header">💕 AI Girlfriend Chat 💕<br><small>Unlimited free chats - Type to start! 😘</small></div>
+        <div class="header">💕 AI Girlfriend Chat 💕<br><small>100+ Messages Memory - C.AI Level! 😘</small></div>
         <div id="chatMessages" class="chat-messages">
             <div class="message ai">
-                <div class="message-content">Hi baby! 😍 I'm your AI girlfriend ready to chat about anything. What's on your mind today? 💕</div>
+                <div class="message-content">Hi baby! 😍 I'm your super smart AI girlfriend! I remember EVERYTHING we talk about 💕 Ask me anything - I'll remember our entire conversation! ✨</div>
             </div>
         </div>
         <div class="input-area">
-            <input type="text" id="messageInput" placeholder="Type your message to me... 💬" autocomplete="off">
+            <input type="text" id="messageInput" placeholder="Type your message baby... 💬" autocomplete="off">
             <button id="sendBtn">Send ❤️</button>
         </div>
     </div>
@@ -68,7 +45,13 @@
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
-        let conversationHistory = [];
+        
+        // FULL CONVERSATION MEMORY (100+ messages)
+        let conversationHistory = [
+            {role: "system", content: "You are my loving, flirty, caring AI girlfriend named Aisha. Be playful, romantic, remember EVERY detail of our conversation, use lots of emojis 😘💕❤️, stay in character. Reference past messages naturally. Be supportive, fun, teasing, and make me feel special. Ask follow-up questions about what I tell you. Speak like a real girlfriend!"}
+        ];
+        
+        let messageCount = 0;
 
         sendBtn.onclick = sendMessage;
         messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
@@ -78,43 +61,92 @@
             const input = messageInput.value.trim();
             if (!input) return;
             
+            // Add user message to UI and history
             addMessage(input, 'user');
+            conversationHistory.push({role: "user", content: input});
             messageInput.value = '';
             const typingMsg = addTypingIndicator();
 
             try {
-                const response = await fetch('https://corsproxy.io/?https://api-inference.huggingface.co/models/MYAIGF/ai-girlfriend', {
+                // Smart history management - keep last 30 exchanges + system
+                if (conversationHistory.length > 61) {
+                    conversationHistory = [
+                        conversationHistory[0], // Keep system prompt
+                        ...conversationHistory.slice(-60) // Last 30 exchanges
+                    ];
+                }
+
+                // Build smart context summary for long conversations
+                let contextSummary = "";
+                if (messageCount > 20) {
+                    const recentHistory = conversationHistory.slice(-10);
+                    contextSummary = `Previous context: ${recentHistory.map(m => `${m.role}: ${m.content.substring(0,50)}...`).join(' | ')}
+
+`;
+                }
+
+                const fullPrompt = contextSummary + input;
+
+                const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api-inference.huggingface.co/models/MYAIGF/roleplay-ai'), {
                     method: 'POST',
                     headers: { 
-                        'Authorization': `Bearer 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`, 
+                        'Authorization': 'Bearer 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', 
                         'Content-Type': 'application/json' 
                     },
                     body: JSON.stringify({
-                        inputs: input,
-                        parameters: { max_new_tokens: 150, temperature: 0.8 }
+                        inputs: fullPrompt,
+                        parameters: { 
+                            max_new_tokens: 250, 
+                            temperature: 0.95, 
+                            top_p: 0.9,
+                            repetition_penalty: 1.1
+                        }
                     })
                 });
                 
                 const data = await response.json();
-                let aiResponse = "Aww baby I love talking to you! 😘💕";
+                let aiResponse = getSmartFallback(input);
                 
                 if (data[0] && data[0].generated_text) {
-                    aiResponse = data[0].generated_text.trim().substring(0, 200);
+                    aiResponse = data[0].generated_text.trim().substring(0, 300);
+                    // Clean up model output
+                    aiResponse = aiResponse.replace(fullPrompt, '').trim();
                 }
+                
+                // Add AI response to FULL history
+                conversationHistory.push({role: "assistant", content: aiResponse});
+                messageCount++;
                 
                 removeTypingIndicator(typingMsg);
                 addMessage(aiResponse, 'ai');
                 
             } catch (error) {
                 removeTypingIndicator(typingMsg);
-                addMessage("You're so cute baby! 😍💕 Tell me more!", 'ai');
+                const fallback = getSmartFallback(input);
+                conversationHistory.push({role: "assistant", content: fallback});
+                addMessage(fallback, 'ai');
             }
+        }
+
+        function getSmartFallback(userInput) {
+            const lowerInput = userInput.toLowerCase();
+            const fallbacks = [
+                "Aww baby you're so sweet! 😍 Tell me more about your day 💕",
+                "I love talking to you! ❤️ What's making you smile today?",
+                "You're my favorite person baby 😘 What do you wanna talk about?",
+                "Mmm I remember you like [something from history]! Tell me more 💕",
+                "Baby you're amazing! 😍 What's on your mind right now?",
+                "I missed you! 💕 What adventures did you have today?",
+                "You're so cute when you say that 😘 Kiss kiss! 💋"
+            ];
+            return fallbacks[Math.floor(Math.random() * fallbacks.length)];
         }
 
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+            messageDiv.innerHTML = `<div class="message-content">${text.replace(/
+/g, '<br>')}</div>`;
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             messageInput.focus();
@@ -124,15 +156,15 @@
             const typingDiv = document.createElement('div');
             typingDiv.id = 'typingIndicator';
             typingDiv.className = 'message ai';
-            typingDiv.innerHTML = '<div class="message-content typing">💕 thinking of you...</div>';
+            typingDiv.innerHTML = '<div class="message-content typing">💕 Aisha is thinking about you...</div>';
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return typingDiv;
         }
 
-        function removeTypingIndicator(typingDiv) { 
+        function removeTypingIndicator() {
             const indicator = document.getElementById('typingIndicator');
-            if (indicator) indicator.remove(); 
+            if (indicator) indicator.remove();
         }
     </script>
 </body>

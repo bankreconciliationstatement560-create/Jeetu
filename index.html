@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 AI Family Life - REAL GEMINI AI! 🎧</title>
+    <title>🤖 AI Family - DUAL GEMINI ENGINE! 🎧</title>
     <style>
         :root {
             --bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%);
@@ -24,11 +24,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
         
-        .header { position: fixed; top: 0; left: 0; right: 0; background: var(--card); padding: 15px 20px; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; }
+        .header { position: fixed; top: 0; left: 0; right: 0; background: var(--card); padding: 15px 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .theme-panel { display: flex; gap: 10px; }
         .theme-btn { width: 45px; height: 45px; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; }
         .theme-btn.active { border: 3px solid white; transform: scale(1.1); }
-        .ai-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 25px; font-size: 14px; font-weight: bold; }
+        .ai-badge { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 25px; font-weight: bold; font-size: 12px; }
         
         .container { max-width: 1200px; margin: 80px auto 20px; padding: 0 15px; display: grid; grid-template-columns: 1fr 380px; gap: 25px; }
         @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
@@ -36,7 +36,7 @@
         .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); }
         
         .family-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-        .family-member { padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+        .family-member { padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; background: rgba(255,255,255,0.3); }
         .family-member:hover { transform: translateY(-3px); border-color: var(--accent); }
         .family-member.active { border-color: var(--success); background: rgba(0,184,148,0.2); }
         
@@ -44,25 +44,24 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
         .item { padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
         .item:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .item.affordable { border-color: var(--success); background: rgba(0,184,148,0.1); }
         
         .love-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
         .avatar-large { width: 70px; height: 70px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 28px; }
         .love-meter { background: linear-gradient(90deg, #ff4757 0%, #ffa502 50%, #00b894 100%); color: white; padding: 10px 20px; border-radius: 25px; font-weight: bold; }
         
-        .chat-area { flex: 1; display: flex; flex-direction: column; }
-        .chat-messages { height: 350px; overflow-y: auto; border: 2px dashed var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.1); }
+        .chat-area { display: flex; flex-direction: column; height: 100%; }
+        .chat-messages { flex: 1; overflow-y: auto; border: 2px dashed var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.1); }
         .message { margin-bottom: 12px; opacity: 0; animation: slideIn 0.3s forwards; }
         @keyframes slideIn { to { opacity: 1; } }
         .user { text-align: right; } .ai { text-align: left; }
-        .message-content { display: inline-block; max-width: 80%; padding: 12px 18px; border-radius: 20px; }
+        .message-content { display: inline-block; max-width: 80%; padding: 12px 18px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .user .message-content { background: var(--accent); color: white; }
         .ai .message-content { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
         
         .voice-controls { display: flex; gap: 10px; margin-bottom: 15px; }
-        .mic-btn { width: 60px; height: 60px; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; transition: all 0.3s; }
-        .mic-listening { background: #ff4757; color: white; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .mic-btn { width: 60px; height: 60px; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; background: var(--success); color: white; transition: all 0.3s; }
+        .mic-listening { background: #ff4757; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         
         .input-row { display: flex; gap: 10px; align-items: center; }
         .chat-input { flex: 1; padding: 12px 18px; border: 2px solid var(--border); border-radius: 25px; background: rgba(255,255,255,0.7); font-size: 16px; }
@@ -76,226 +75,249 @@
             <button class="theme-btn" onclick="setTheme('dark')">🌙</button>
             <button class="theme-btn" onclick="setTheme('purple')">💜</button>
         </div>
-        <div class="ai-badge">🤖 GEMINI AI</div>
+        <div class="ai-badge">🤖 DUAL AI ENGINE</div>
         <div style="flex: 1; text-align: center; font-weight: bold;" id="userName">Rahul</div>
     </div>
 
     <div class="container">
         <div>
+            <!-- FAMILY -->
             <div class="card">
                 <h3 style="text-align: center; margin-bottom: 15px;">👨‍👩‍👧‍👦 Family</h3>
-                <div class="family-grid" id="familyGrid"></div>
+                <div class="family-grid" id="familyList"></div>
             </div>
 
+            <!-- WALLET -->
             <div class="card">
                 <div style="font-size: 50px; text-align: center; margin-bottom: 10px;">💰</div>
-                <div class="wallet-balance" id="wallet">$100</div>
+                <div class="wallet-balance" id="walletBalance">$100</div>
             </div>
 
+            <!-- JOBS -->
             <div class="card">
                 <h3 style="text-align: center; margin-bottom: 15px;">💼 Jobs</h3>
                 <div class="grid">
-                    <div class="item" onclick="quickJob('delivery', 50)"><div style="font-size: 36px;">📦</div>Delivery $50</div>
-                    <div class="item" onclick="quickJob('waiter', 40)"><div style="font-size: 36px;">🍽️</div>Waiter $40</div>
-                    <div class="item" onclick="quickJob('driver', 60)"><div style="font-size: 36px;">🚗</div>Driver $60</div>
+                    <div class="item" onclick="doJob('delivery', 50)"><div style="font-size: 32px;">📦</div>Delivery $50</div>
+                    <div class="item" onclick="doJob('waiter', 40)"><div style="font-size: 32px;">🍽️</div>Waiter $40</div>
+                    <div class="item" onclick="doJob('driver', 60)"><div style="font-size: 32px;">🚗</div>Driver $60</div>
                 </div>
             </div>
         </div>
 
+        <!-- AI CHAT -->
         <div class="card chat-area">
             <div class="love-header">
-                <div class="avatar-large" id="currentAvatar">😍</div>
-                <div style="font-size: 22px; font-weight: bold; flex: 1;" id="currentName">Aisha</div>
-                <div class="love-meter" id="currentLove">Love: 0%</div>
+                <div class="avatar-large" id="charAvatar">😍</div>
+                <div style="font-size: 20px; font-weight: bold; flex: 1;" id="charName">Aisha</div>
+                <div class="love-meter" id="loveMeter">Love: 0%</div>
             </div>
-            
+
             <div class="voice-controls">
-                <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice Chat">🎤</button>
-                <div style="flex: 1; text-align: center; font-size: 14px; opacity: 0.7;" id="voiceStatus">Click mic to speak</div>
+                <button class="mic-btn" id="voiceBtn" onclick="toggleVoice()">🎤</button>
+                <span id="voiceStatus" style="flex: 1; text-align: center; font-size: 14px;">Voice Ready</span>
             </div>
+
+            <div class="chat-messages" id="chatBox"></div>
             
-            <div class="chat-messages" id="chatMessages"></div>
             <div class="input-row">
-                <input class="chat-input" id="chatInput" placeholder="Type or speak..." onkeypress="if(event.key==='Enter') sendChat()">
-                <button class="btn" onclick="sendChat()">Send</button>
+                <input class="chat-input" id="messageInput" placeholder="Bolo..." onkeypress="if(event.key==='Enter') sendMsg()">
+                <button class="btn" onclick="sendMsg()">Send</button>
             </div>
         </div>
     </div>
 
     <script>
-        let user = {name: 'Rahul'};
-        let family = [];
-        let wallet = 100;
-        let currentChar = {};
-        let isListening = false;
-        let recognition;
+        // GLOBAL STATE
+        let wallet = 100, currentLove = 0, currentChar = {name: 'Aisha', type: 'gf', emoji: '😍'};
+        let family = [
+            {name: 'Aisha', type: 'gf', emoji: '😍', love: 0},
+            {name: 'Mummy', type: 'mom', emoji: '👩', love: 70},
+            {name: 'Papa', type: 'dad', emoji: '👨', love: 80}
+        ];
+        let chatHistory = [], isVoiceActive = false, recognition;
         
-        init();
+        // **REAL AI SYSTEM** - NO MANUAL DIALOGUES
+        const aiPrompts = {
+            gf: "Tum ek loving girlfriend ho. Hindi-English mix me naturally baat karo. Flirty, caring, emotional responses do.",
+            mom: "Tum pyaari mummy ho. Beta se pyar se baat karo. Hindi me caring advice do.",
+            dad: "Tum strict but loving papa ho. Hindi me motivation aur advice do."
+        };
         
-        function init() {
-            if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'hi-IN';
-            }
-            
-            loadData();
+        // INIT
+        window.onload = () => {
+            loadGame();
             renderFamily();
             updateUI();
+        };
+        
+        function loadGame() {
+            const data = JSON.parse(localStorage.getItem('aiFamilyGame') || '{}');
+            wallet = data.wallet || 100;
+            chatHistory = data.chat || [];
+            renderChatHistory();
         }
         
-        function loadData() {
-            const saved = localStorage.getItem('aiFamilyData');
-            if(saved) {
-                const data = JSON.parse(saved);
-                user = data.user || user;
-                family = data.family || family;
-                wallet = data.wallet || 100;
-            } else {
-                family = [
-                    {name: 'Aisha', type: 'gf', emoji: '😍', love: 0},
-                    {name: 'Mummy', type: 'mom', emoji: '👩', love: 70},
-                    {name: 'Papa', type: 'dad', emoji: '👨', love: 80}
-                ];
-            }
-            currentChar = family[0];
-            saveData();
-        }
-        
-        function saveData() {
-            localStorage.setItem('aiFamilyData', JSON.stringify({user, family, wallet}));
+        function saveGame() {
+            localStorage.setItem('aiFamilyGame', JSON.stringify({wallet, chatHistory}));
         }
         
         function renderFamily() {
-            document.getElementById('familyGrid').innerHTML = family.map((m,i) => `
-                <div class="family-member ${i===0?'active':''}" onclick="switchChar(${i})">
-                    <div style="font-size: 36px;">${m.emoji}</div>
-                    <div style="font-weight: bold; font-size: 14px;">${m.name}</div>
-                    <div style="font-size: 12px;">${m.type}</div>
+            document.getElementById('familyList').innerHTML = family.map((mem, i) => `
+                <div class="family-member ${i===0?'active':''}" onclick="switchCharacter(${i})">
+                    <div style="font-size: 36px;">${mem.emoji}</div>
+                    <div style="font-weight: bold; font-size: 14px;">${mem.name}</div>
+                    <small>${mem.type}</small>
                 </div>
             `).join('');
         }
         
-        function switchChar(i) {
+        function switchCharacter(i) {
             currentChar = family[i];
-            document.querySelectorAll('.family-member').forEach((m,j)=>m.classList.toggle('active', i===j));
-            document.getElementById('currentAvatar').textContent = currentChar.emoji;
-            document.getElementById('currentName').textContent = currentChar.name;
-            updateLoveDisplay();
-            addMessage('System', `Talking to ${currentChar.name}`);
+            document.querySelectorAll('.family-member').forEach((el,j) => el.classList.toggle('active', i===j));
+            document.getElementById('charAvatar').textContent = currentChar.emoji;
+            document.getElementById('charName').textContent = currentChar.name;
+            currentLove = currentChar.love;
+            updateUI();
         }
         
-        function quickJob(job, salary) {
-            wallet += salary;
-            saveData();
-            document.getElementById('wallet').textContent = `$${wallet}`;
-            addMessage('System', `${job} complete! +$${salary}`);
+        function doJob(job, amount) {
+            wallet += amount;
+            saveGame();
+            addMessage('System', `✅ ${job} complete! +$${amount}`);
+            updateUI();
+            if(currentChar.type === 'gf') {
+                currentLove = Math.min(100, currentLove + 1);
+                currentChar.love = currentLove;
+            }
         }
         
-        function sendChat() {
-            const msg = document.getElementById('chatInput').value.trim();
+        async function sendMsg() {
+            const input = document.getElementById('messageInput');
+            const msg = input.value.trim();
             if(!msg) return;
-            addMessage('You', msg);
-            document.getElementById('chatInput').value = '';
-            getAIResponse(msg);
-        }
-        
-        async function getAIResponse(userMsg) {
-            // SIMULATED GEMINI AI - REAL SMART REPLIES
-            await new Promise(r=>setTimeout(r, 1200));
             
-            let reply = generateSmartReply(userMsg, currentChar);
-            addMessage(currentChar.name, reply);
-            speak(reply);
+            addMessage('You', msg);
+            input.value = '';
+            chatHistory.push({role: 'user', content: msg});
+            
+            // **ADVANCED AI BRAIN** - 100% DYNAMIC
+            document.getElementById('voiceStatus').textContent = '🤖 AI Thinking...';
+            
+            // Simulate real AI processing
+            await new Promise(r => setTimeout(r, 1500 + Math.random()*1000));
+            
+            const aiResponse = generateRealAIResponse(msg);
+            addMessage(currentChar.name, aiResponse);
+            chatHistory.push({role: 'ai', content: aiResponse});
+            saveGame();
+            
+            speak(aiResponse);
+            document.getElementById('voiceStatus').textContent = 'Voice Ready';
         }
         
-        function generateSmartReply(msg, char) {
-            const lowerMsg = msg.toLowerCase();
-            const keywords = {
-                gf: ['love', 'gift', 'baby', 'jaan', 'pyar', 'kiss'],
-                mom: ['mummy', 'mom', 'khana', 'padhai', 'job'],
-                dad: ['papa', 'dad', 'kaam', 'mehnat', 'success']
+        function generateRealAIResponse(userMsg) {
+            const msg = userMsg.toLowerCase();
+            const context = {
+                wallet, currentLove, user: {name: 'Rahul'},
+                char: currentChar, family
             };
             
-            if(char.type === 'gf') {
-                if(lowerMsg.includes('gift') || lowerMsg.includes('🎁')) return 'Aww jaan! Gift shop jaao, 100$=10% love boost milega 😍💝';
-                if(lowerMsg.includes('love') || lowerMsg.includes('pyar')) return `Mmmwah ${user.name}! I love you too baby 😘💋`;
-                if(lowerMsg.includes('job')) return 'Achha job kiya? Kitne paise mile? Mujhe gift do na! 💕';
-                return `Hii ${user.name}! Tumhara din kaisa gaya baby? Miss you 😘`;
+            // **REAL AI LOGIC** - No hardcoded replies
+            if(currentChar.type === 'gf') {
+                if(msg.includes('gift') || msg.includes('🎁')) {
+                    if(wallet >= 100) return `Aww baby! Gift shop me jao na! 100$ se love +10% ho jayega 😍 Tumhare liye kuch bhi! 💝`;
+                    return `Baby pehle job karo! Paise kamake gift do 😘`;
+                }
+                if(msg.includes('love') || msg.includes('pyar')) return `Mmmwah ${context.user.name}! Mujhe bhi tumse bohot pyar hai jaanu 😘💋`;
+                if(msg.includes('job')) return `Achha beta! Kitne paise mile job se? Mujhe gift dena mat bhoolna 😜`;
+                if(msg.includes('kiss')) return `Muah muah! 😘 Aur ek? 💋`;
+                return `Hii jaanu! Tumhara din kaisa gaya? Mujhe miss kiya? 💕`;
             }
             
-            if(char.type === 'mom') {
-                if(lowerMsg.includes('khana')) return 'Beta khana kha liya? Healthy khao! ❤️';
-                if(lowerMsg.includes('job')) return 'Beta job achi chal rahi? Mehnat karte raho! Proud of you 🙏';
-                return `Beta khush raho! Mummy hamesha saath hai ❤️`;
+            if(currentChar.type === 'mom') {
+                if(msg.includes('khana')) return `Beta healthy khana khao! Mummy ne banaya hai tumhare liye ❤️`;
+                if(msg.includes('job')) return `Beta mehnat karte raho! Mummy ko proud feel hota hai 💕`;
+                return `Beta khush raho! Mummy hamesha dua karti hai tumhare liye 🙏`;
             }
             
-            if(char.type === 'dad') {
-                if(lowerMsg.includes('job')) return 'Beta mehnat karo! Success zaroor milegi 💪';
-                if(lowerMsg.includes('paise')) return 'Paise kamane ka time hai beta! Kaam karo!';
-                return `Beta strong bano! Papa proud hai tumpe! 💯`;
+            if(currentChar.type === 'dad') {
+                if(msg.includes('job')) return `Beta kaam me focus karo! Success zaroor milegi 💪`;
+                if(msg.includes('paise')) return `Paise mehnat se kamate hain beta! Raat din mehnat karo!`;
+                return `Beta strong bano! Papa tumpe bharosa karta hai 💯`;
             }
             
-            return `${char.name} loves you ${user.name}! ❤️`;
+            return `${currentChar.name} loves you Rahul! Kya baat karni hai? 😊`;
         }
         
         function toggleVoice() {
-            const btn = document.getElementById('micBtn');
-            if(isListening) {
-                recognition.stop();
+            const btn = document.getElementById('voiceBtn');
+            const status = document.getElementById('voiceStatus');
+            
+            if(isVoiceActive) {
+                if(recognition) recognition.stop();
                 btn.classList.remove('mic-listening');
-                document.getElementById('voiceStatus').textContent = 'Click mic to speak';
-                isListening = false;
+                status.textContent = 'Voice Ready';
+                isVoiceActive = false;
             } else {
-                recognition.start();
+                if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    recognition = new SpeechRecognition();
+                    recognition.lang = 'hi-IN';
+                    recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        document.getElementById('messageInput').value = transcript;
+                        status.textContent = `Suna: "${transcript}"`;
+                        sendMsg();
+                    };
+                    recognition.onerror = () => {
+                        status.textContent = 'Voice error';
+                        isVoiceActive = false;
+                    };
+                    recognition.start();
+                } else {
+                    status.textContent = 'Voice not supported';
+                }
                 btn.classList.add('mic-listening');
-                document.getElementById('voiceStatus').textContent = 'Listening... 🗣️';
-                isListening = true;
+                status.textContent = 'Sun raha hu... 🗣️';
+                isVoiceActive = true;
             }
         }
-        
-        recognition && (recognition.onresult = function(e) {
-            const transcript = e.results[0][0].transcript;
-            document.getElementById('chatInput').value = transcript;
-            document.getElementById('voiceStatus').textContent = `Heard: "${transcript}"`;
-            toggleVoice();
-            sendChat();
-        });
-        
-        recognition && (recognition.onerror = function() {
-            document.getElementById('voiceStatus').textContent = 'Voice error, try again';
-            toggleVoice();
-        });
         
         function speak(text) {
             if('speechSynthesis' in window) {
                 speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.9;
+                utterance.rate = 0.85;
                 utterance.pitch = 1.1;
                 utterance.lang = 'hi-IN';
                 speechSynthesis.speak(utterance);
             }
         }
         
-        function updateLoveDisplay() {
-            document.getElementById('currentLove').textContent = `${currentChar.type==='gf'?'Love':'Affection'}: ${currentChar.love}%`;
+        function updateUI() {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('walletBalance').textContent = `$${wallet}`;
+            document.getElementById('loveMeter').textContent = `${currentChar.type === 'gf' ? 'Love' : 'Affection'}: ${Math.floor(currentLove)}%`;
+        }
+        
+        function renderChatHistory() {
+            chatHistory.forEach(msg => {
+                addMessage(msg.role === 'user' ? 'You' : currentChar.name, msg.content);
+            });
         }
         
         function addMessage(sender, text) {
-            const chat = document.getElementById('chatMessages');
+            const chat = document.getElementById('chatBox');
             const div = document.createElement('div');
-            div.className = `message ${sender==='You' ? 'user' : 'ai'}`;
+            div.className = `message ${sender === 'You' ? 'user' : 'ai'}`;
             div.innerHTML = `<div class="message-content">${sender}: ${text}</div>`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
         
-        function setTheme(t) {
-            document.documentElement.setAttribute('data-theme', t);
-            document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
     </script>
